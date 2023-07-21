@@ -36,33 +36,32 @@
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const radius = 200;
-    ctx.strokeStyle = 'rgb(0, 0, 255)';
+    ctx.fillStyle = 'white';
+    ctx.strokeStyle = 'blue';
     ctx.lineWidth = 10;
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
     ctx.stroke();
+    ctx.fill();
     };
-
-    // function createCollisionPixels() {
-    //     ctx.fillStyle = 'black';
-    //     ctx.fillRect(ball.centerX, ball.centerY - ball.radius - 2, 1, 1);
-    //     ctx.fillRect(ball.centerX + ball.radius + 2, ball.centerY, 1, 1);
-    //     ctx.fillRect(ball.centerX, ball.centerY + ball.radius + 2, 1, 1);
-    //     ctx.fillRect(ball.centerX - ball.radius - 2, ball.centerY, 1, 1);
-    // }
+    
 
     function drawMaze() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawLogo();
         drawBall();
-        // createCollisionPixels();
     }
 
     function checkCollision() {
-        const topPixelData = ctx.getImageData(ball.centerX, ball.centerY - ball.radius - 4, 1, 1).data.slice(0, 3);
-        const rightPixelData = ctx.getImageData(ball.centerX + ball.radius + 4, ball.centerY, 1, 1).data.slice(0, 3);
-        const bottomPixelData = ctx.getImageData(ball.centerX, ball.centerY + ball.radius + 4, 1, 1).data.slice(0, 3);
-        const leftPixelData = ctx.getImageData(ball.centerX - ball.radius - 4, ball.centerY, 1, 1).data.slice(0, 3);
+        const topPixelData = ctx.getImageData(ball.centerX, ball.centerY - ball.radius - 2, 1, 1).data.slice(0, 3);
+        const rightPixelData = ctx.getImageData(ball.centerX + ball.radius + 2, ball.centerY, 1, 1).data.slice(0, 3);
+        const bottomPixelData = ctx.getImageData(ball.centerX, ball.centerY + ball.radius + 2, 1, 1).data.slice(0, 3);
+        const leftPixelData = ctx.getImageData(ball.centerX - ball.radius - 2, ball.centerY, 1, 1).data.slice(0, 3);
+
+        const topRightPixelData = ctx.getImageData(ball.centerX + ball.radius, ball.centerY - ball.radius, 1, 1).data.slice(0, 3);
+        const bottomRightPixelData = ctx.getImageData(ball.centerX + ball.radius, ball.centerY + ball.radius, 1, 1).data.slice(0, 3);
+        const bottomLeftPixelData = ctx.getImageData(ball.centerX - ball.radius, ball.centerY + ball.radius, 1, 1).data.slice(0, 3);
+        const topLeftPixelData = ctx.getImageData(ball.centerX - ball.radius, ball.centerY - ball.radius, 1, 1).data.slice(0, 3);
 
         const bluePixel = [0, 0, 255];
 
@@ -71,6 +70,10 @@
             rightPixel: rightPixelData.every((value, index) => value === bluePixel[index]),
             bottomPixel: bottomPixelData.every((value, index) => value === bluePixel[index]),
             leftPixel: leftPixelData.every((value, index) => value === bluePixel[index]),
+            topRightPixel: topRightPixelData.every((value, index) => value === bluePixel[index]),
+            bottomRightPixel: bottomRightPixelData.every((value, index) => value === bluePixel[index]),
+            bottomLeftPixel: bottomLeftPixelData.every((value, index) => value === bluePixel[index]),
+            topLeftPixel: topLeftPixelData.every((value, index) => value === bluePixel[index]),
         };
     }
 
@@ -97,17 +100,17 @@
                     const collision = checkCollision();
                     const frontToBack = event.beta;
                     const leftToRight = event.gamma;
-                    if (frontToBack < 0 && !collision.topPixel) {
-                        ball.centerY += Math.min(10, Math.max(-10, Math.round(frontToBack)/2));
+                    if (frontToBack < 0 && !collision.topPixel && !collision.topRightPixel && !collision.topLeftPixel) {
+                        ball.centerY += Math.min(10, Math.max(-10, Math.round(frontToBack)));
                     }
-                    if (frontToBack > 0 && !collision.bottomPixel) {
-                        ball.centerY += Math.min(10, Math.max(-10, Math.round(frontToBack)/2));
+                    if (frontToBack > 0 && !collision.bottomPixel && !collision.bottomRightPixel && !collision.bottomLeftPixel) {
+                        ball.centerY += Math.min(10, Math.max(-10, Math.round(frontToBack)));
                     }
-                    if (leftToRight > 0 && !collision.rightPixel) {
-                        ball.centerX += Math.min(10, Math.max(-10, Math.round(leftToRight)/2));
+                    if (leftToRight > 0 && !collision.rightPixel && !collision.topRightPixel && !collision.bottomRightPixel) {
+                        ball.centerX += Math.min(10, Math.max(-10, Math.round(leftToRight)));
                     }
-                    if (leftToRight < 0 && !collision.leftPixel) {
-                        ball.centerX += Math.min(10, Math.max(-10, Math.round(leftToRight)/2));
+                    if (leftToRight < 0 && !collision.leftPixel && !collision.topLeftPixel && !collision.bottomLeftPixel) {
+                        ball.centerX += Math.min(10, Math.max(-10, Math.round(leftToRight)));
                     }
                     drawMaze();
                 });

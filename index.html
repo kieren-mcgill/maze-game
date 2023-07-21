@@ -92,9 +92,9 @@
     });
     function getAccel(){
         DeviceMotionEvent.requestPermission().then(response => {
-            const collision = checkCollision();
             if (response === 'granted') {
                 window.addEventListener('deviceorientation',(event) => {
+                    const collision = checkCollision();
                     const frontToBack = event.beta;
                     const leftToRight = event.gamma;
                     if (frontToBack > 0 && !collision.topPixel) {

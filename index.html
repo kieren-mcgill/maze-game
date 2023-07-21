@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
     <title>Maze game</title>
 </head>
 <body>
-<button id="playButton"  style="height:50px;" onclick="getAccel()"><h3>Play game!</h3></button>
+<div class="btn-div">
+<button class="play-btn" id="playButton"  style="height:50px;" onclick="getAccel()"><h2>Play game!</h2></button>
+</div>
 <canvas id="myCanvas" width="500" height="500" style="border:1px solid #000000;">
     Your browser does not support the HTML canvas tag.
 </canvas>
+<div></div>
 
 <script>
-
 
     const canvas = document.getElementById('myCanvas');
     const ctx = canvas.getContext('2d');
@@ -40,73 +43,77 @@
     ctx.stroke();
     };
 
+    // function createCollisionPixels() {
+    //     ctx.fillStyle = 'black';
+    //     ctx.fillRect(ball.centerX, ball.centerY - ball.radius - 2, 1, 1);
+    //     ctx.fillRect(ball.centerX + ball.radius + 2, ball.centerY, 1, 1);
+    //     ctx.fillRect(ball.centerX, ball.centerY + ball.radius + 2, 1, 1);
+    //     ctx.fillRect(ball.centerX - ball.radius - 2, ball.centerY, 1, 1);
+    // }
+
     function drawMaze() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawLogo();
         drawBall();
+        // createCollisionPixels();
     }
 
     function checkCollision() {
-        const rawImgData = ctx.getImageData(ball.centerX - 5, ball.centerY + 5, 10, 10);
+        const topPixelData = ctx.getImageData(ball.centerX, ball.centerY - ball.radius - 2, 1, 1).data.slice(0, 3);
+        const rightPixelData = ctx.getImageData(ball.centerX + ball.radius + 2, ball.centerY, 1, 1).data.slice(0, 3);
+        const bottomPixelData = ctx.getImageData(ball.centerX, ball.centerY + ball.radius + 2, 1, 1).data.slice(0, 3);
+        const leftPixelData = ctx.getImageData(ball.centerX - ball.radius - 2, ball.centerY, 1, 1).data.slice(0, 3);
+
         const bluePixel = [0, 0, 255];
-        const collisionPixels = [
-            //top
-            [rawImgData.data[16], rawImgData.data[17], rawImgData.data[18]],
-            //right
-            [rawImgData.data[196], rawImgData.data[197], rawImgData.data[198]],
-            //bottom
-            [rawImgData.data[380], rawImgData.data[381], rawImgData.data[382]],
-            //left (keep returning red!)
-            [rawImgData.data[200], rawImgData.data[201], rawImgData.data[202]]
-        ];
-        return [
-            collisionPixels[0].every((value, index) => value === bluePixel[index]),
-            collisionPixels[1].every((value, index) => value === bluePixel[index]),
-            collisionPixels[2].every((value, index) => value === bluePixel[index]),
-            collisionPixels[3].every((value, index) => value === bluePixel[index])
-        ]
+
+        return {
+            topPixel: topPixelData.every((value, index) => value === bluePixel[index]),
+            rightPixel: rightPixelData.every((value, index) => value === bluePixel[index]),
+            bottomPixel: bottomPixelData.every((value, index) => value === bluePixel[index]),
+            leftPixel: leftPixelData.every((value, index) => value === bluePixel[index]),
+        };
     }
 
     document.addEventListener('keydown', function(event) {
-        if (event.key === 'ArrowUp' && !checkCollision()[0]) {
+        const collision = checkCollision();
+        if (event.key === 'ArrowUp' && !collision.topPixel) {
             ball.centerY -= 5;
         }
-        if (event.key === 'ArrowRight' && !checkCollision()[1]) {
+        if (event.key === 'ArrowRight' && !collision.rightPixel) {
             ball.centerX += 5;
         }
-        if (event.key === 'ArrowDown' && !checkCollision()[2]) {
+        if (event.key === 'ArrowDown' && !collision.bottomPixel) {
             ball.centerY += 5;
         }
-        if (event.key === 'ArrowLeft' && !checkCollision()[3]) {
+        if (event.key === 'ArrowLeft' && !collision.leftPixel) {
             ball.centerX -= 5;
         }
         drawMaze();
     });
-
     function getAccel(){
         DeviceMotionEvent.requestPermission().then(response => {
+            const collision = checkCollision();
             if (response === 'granted') {
-                alert("accelerometer permission granted");
                 window.addEventListener('deviceorientation',(event) => {
                     const frontToBack = event.beta;
                     const leftToRight = event.gamma;
-                    if (frontToBack >= 0 && !checkCollision()[0]) {
+                    if (frontToBack > 0 && !collision.topPixel) {
                         ball.centerY += Math.round(frontToBack);
                     }
-                    if (frontToBack < 0 && !checkCollision()[2]) {
+                    if (frontToBack < 0 && !collision.bottomPixel) {
                         ball.centerY += Math.round(frontToBack);
                     }
-                    if (leftToRight >= 0 && !checkCollision()[1]) {
-                        ball.centerX += Math.round(leftToRight);
+                    if (leftToRight > 0 && !collision.rightPixel) {
+                        ball.centerY += Math.round(leftToRight);
                     }
-                    if (leftToRight < 0 && !checkCollision()[3]) {
-                        ball.centerX += Math.round(leftToRight);
+                    if (leftToRight < 0 && !collision.leftPixel) {
+                        ball.centerY += Math.round(leftToRight);
                     }
                     drawMaze();
-                })
-            }
+                });
+            };
         });
-    }
+    };
     drawMaze();
 </script>
 </body>

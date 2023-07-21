@@ -104,10 +104,10 @@
                         ball.centerY += Math.round(frontToBack);
                     }
                     if (leftToRight > 0 && !collision.rightPixel) {
-                        ball.centerY += Math.round(leftToRight);
+                        ball.centerX += Math.round(leftToRight);
                     }
                     if (leftToRight < 0 && !collision.leftPixel) {
-                        ball.centerY += Math.round(leftToRight);
+                        ball.centerX += Math.round(leftToRight);
                     }
                     drawMaze();
                 });

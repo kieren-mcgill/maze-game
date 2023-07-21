@@ -101,16 +101,16 @@
                     const frontToBack = event.beta;
                     const leftToRight = event.gamma;
                     if (frontToBack < 0 && !collision.topPixel && !collision.topRightPixel && !collision.topLeftPixel) {
-                        ball.centerY += Math.min(10, Math.max(-10, Math.round(frontToBack)));
+                        ball.centerY += Math.min(10, Math.max(-10, Math.round(frontToBack)/2));
                     }
                     if (frontToBack > 0 && !collision.bottomPixel && !collision.bottomRightPixel && !collision.bottomLeftPixel) {
-                        ball.centerY += Math.min(10, Math.max(-10, Math.round(frontToBack)));
+                        ball.centerY += Math.min(10, Math.max(-10, Math.round(frontToBack)/2));
                     }
                     if (leftToRight > 0 && !collision.rightPixel && !collision.topRightPixel && !collision.bottomRightPixel) {
-                        ball.centerX += Math.min(10, Math.max(-10, Math.round(leftToRight)));
+                        ball.centerX += Math.min(10, Math.max(-10, Math.round(leftToRight)/2));
                     }
                     if (leftToRight < 0 && !collision.leftPixel && !collision.topLeftPixel && !collision.bottomLeftPixel) {
-                        ball.centerX += Math.min(10, Math.max(-10, Math.round(leftToRight)));
+                        ball.centerX += Math.min(10, Math.max(-10, Math.round(leftToRight)/2));
                     }
                     drawMaze();
                 });

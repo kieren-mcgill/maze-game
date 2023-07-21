@@ -1,19 +1,1 @@
 
-
-body {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-}
-
-.btn-div {
-    display: flex;
-    justify-content: center;
-}
-
-.play-btn {
-    min-height: 100px;
-    min-width: 200px;
-}

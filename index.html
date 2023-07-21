@@ -98,16 +98,16 @@
                     const frontToBack = event.beta;
                     const leftToRight = event.gamma;
                     if (frontToBack < 0 && !collision.topPixel) {
-                        ball.centerY += Math.round(frontToBack);
+                        ball.centerY += Math.round(frontToBack)/2;
                     }
                     if (frontToBack > 0 && !collision.bottomPixel) {
-                        ball.centerY += Math.round(frontToBack);
+                        ball.centerY += Math.round(frontToBack)/2;
                     }
                     if (leftToRight > 0 && !collision.rightPixel) {
-                        ball.centerX += Math.round(leftToRight);
+                        ball.centerX += Math.round(leftToRight)/2;
                     }
                     if (leftToRight < 0 && !collision.leftPixel) {
-                        ball.centerX += Math.round(leftToRight);
+                        ball.centerX += Math.round(leftToRight)/2;
                     }
                     drawMaze();
                 });

@@ -97,10 +97,10 @@
                     const collision = checkCollision();
                     const frontToBack = event.beta;
                     const leftToRight = event.gamma;
-                    if (frontToBack > 0 && !collision.topPixel) {
+                    if (frontToBack < 0 && !collision.topPixel) {
                         ball.centerY += Math.round(frontToBack);
                     }
-                    if (frontToBack < 0 && !collision.bottomPixel) {
+                    if (frontToBack > 0 && !collision.bottomPixel) {
                         ball.centerY += Math.round(frontToBack);
                     }
                     if (leftToRight > 0 && !collision.rightPixel) {

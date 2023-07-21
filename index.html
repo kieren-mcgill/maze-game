@@ -59,10 +59,10 @@
     }
 
     function checkCollision() {
-        const topPixelData = ctx.getImageData(ball.centerX, ball.centerY - ball.radius - 2, 1, 1).data.slice(0, 3);
-        const rightPixelData = ctx.getImageData(ball.centerX + ball.radius + 2, ball.centerY, 1, 1).data.slice(0, 3);
-        const bottomPixelData = ctx.getImageData(ball.centerX, ball.centerY + ball.radius + 2, 1, 1).data.slice(0, 3);
-        const leftPixelData = ctx.getImageData(ball.centerX - ball.radius - 2, ball.centerY, 1, 1).data.slice(0, 3);
+        const topPixelData = ctx.getImageData(ball.centerX, ball.centerY - ball.radius - 4, 1, 1).data.slice(0, 3);
+        const rightPixelData = ctx.getImageData(ball.centerX + ball.radius + 4, ball.centerY, 1, 1).data.slice(0, 3);
+        const bottomPixelData = ctx.getImageData(ball.centerX, ball.centerY + ball.radius + 4, 1, 1).data.slice(0, 3);
+        const leftPixelData = ctx.getImageData(ball.centerX - ball.radius - 4, ball.centerY, 1, 1).data.slice(0, 3);
 
         const bluePixel = [0, 0, 255];
 

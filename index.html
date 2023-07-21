@@ -2,19 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="styles.css">
     <title>Maze game</title>
 </head>
 <body>
-<div class="btn-div">
-<button class="play-btn" id="playButton"  style="height:50px;" onclick="getAccel()"><h2>Play game!</h2></button>
-</div>
+<button id="playButton"  style="height:50px;" onclick="getAccel()"><h3>Play game!</h3></button>
 <canvas id="myCanvas" width="500" height="500" style="border:1px solid #000000;">
     Your browser does not support the HTML canvas tag.
 </canvas>
-<div></div>
 
 <script>
+
 
     const canvas = document.getElementById('myCanvas');
     const ctx = canvas.getContext('2d');
@@ -59,7 +56,7 @@
             [rawImgData.data[196], rawImgData.data[197], rawImgData.data[198]],
             //bottom
             [rawImgData.data[380], rawImgData.data[381], rawImgData.data[382]],
-            //left
+            //left (keep returning red!)
             [rawImgData.data[200], rawImgData.data[201], rawImgData.data[202]]
         ];
         return [
@@ -85,9 +82,11 @@
         }
         drawMaze();
     });
+
     function getAccel(){
         DeviceMotionEvent.requestPermission().then(response => {
             if (response === 'granted') {
+                alert("accelerometer permission granted");
                 window.addEventListener('deviceorientation',(event) => {
                     const frontToBack = event.beta;
                     const leftToRight = event.gamma;
@@ -98,16 +97,16 @@
                         ball.centerY += Math.round(frontToBack);
                     }
                     if (leftToRight >= 0 && !checkCollision()[1]) {
-                        ball.centerY += Math.round(leftToRight);
+                        ball.centerX += Math.round(leftToRight);
                     }
                     if (leftToRight < 0 && !checkCollision()[3]) {
-                        ball.centerY += Math.round(leftToRight);
+                        ball.centerX += Math.round(leftToRight);
                     }
                     drawMaze();
-                });
-            };
+                })
+            }
         });
-    };
+    }
     drawMaze();
 </script>
 </body>

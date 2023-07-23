@@ -64,7 +64,6 @@
         drawBall();
     }
 
-
     function getAccel(){
         const XScalingFactor = 2;
         const YScalingFactor = 4;
@@ -77,8 +76,11 @@
                     if(!willCollide) {
                         ball.centerX += accelX;
                         ball.centerY += accelY;
+                    } else {
+                        ball.centerX += accelX / 2;
+                        ball.centerY += accelY / 2;
                     }
-                    drawMaze()
+                    drawMaze();
                 });
             }
         });

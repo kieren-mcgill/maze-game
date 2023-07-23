@@ -68,13 +68,13 @@
             const obstacleColour = [0, 0, 255];
             const checkColour =  ctx.getImageData(xCoordinate -0.5, yCoordinate -0.5, 1, 1).data.slice(0, 3);
             if (checkColour.every((value, index) => value === obstacleColour[index])){
-                adjustX += accelX;
-                adjustY += accelY;
+                adjustX += xCoordinate;
+                adjustY += yCoordinate;
                 contactPixels += 1;
             }
         }
         if(contactPixels > 0) {
-            return {x: -(adjustY / contactPixels), y: -(adjustX / contactPixels)};
+            return {x: -(ball.radius / (adjustY / contactPixels)), y: -(ball.radius / (adjustX / contactPixels))};
         } else {
             return {x: 0, y: 0};
         }

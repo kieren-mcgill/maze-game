@@ -67,13 +67,11 @@
     function getAccel(){
         const XScalingFactor = 2;
         const YScalingFactor = 4;
-        const maxAccel = 3;
-        const minAccel = -3;
         DeviceMotionEvent.requestPermission().then(response => {
             if (response === 'granted') {
                 window.addEventListener('devicemotion',(event) => {
-                    const accelX = Math.max(maxAccel, Math.min(minAccel, (event.accelerationIncludingGravity.x * XScalingFactor)));
-                    const accelY = Math.max(maxAccel, Math.min(minAccel, -(event.accelerationIncludingGravity.y * YScalingFactor)));
+                    const accelX = (event.accelerationIncludingGravity.x * XScalingFactor);
+                    const accelY = -(event.accelerationIncludingGravity.y * YScalingFactor);
                     const willCollide = checkIfCollide(accelX, accelY);
                     if(!willCollide) {
                         ball.centerX += accelX;

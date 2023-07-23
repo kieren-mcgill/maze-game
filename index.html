@@ -69,8 +69,8 @@
         DeviceMotionEvent.requestPermission().then(response => {
             if (response === 'granted') {
                 window.addEventListener('deviceorientation',(event) => {
-                    const accelX = event.gamma;
-                    const accelY = event.beta;
+                    const accelX = event.accelerationIncludingGravity.x;
+                    const accelY = event.accelerationIncludingGravity.y;
                     const willCollide = checkIfCollide(accelX, accelY);
                     if(!willCollide) {
                         ball.centerX += accelX / 2;

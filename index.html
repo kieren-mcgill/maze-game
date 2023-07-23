@@ -22,7 +22,7 @@
     const ball = {
         centerX: canvas.width / 2,
         centerY: canvas.height / 2,
-        radius: 5,
+        radius: 10,
         fillColor: 'red',
     };
     function drawBall() {
@@ -30,7 +30,7 @@
         ctx.beginPath();
         ctx.arc(ball.centerX, ball.centerY, ball.radius, 0, 2 * Math.PI);
         ctx.fill();
-    };
+    }
 
     function drawLogo() {
     const centerX = canvas.width / 2;
@@ -43,8 +43,20 @@
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
     ctx.stroke();
     ctx.fill();
-    };
-    
+    }
+
+    function checkIfCollide(accelX, accelY) {
+        for (let angle  = 0; angle < 360; angle += 10) {
+        const xCoordinate = (ball.centerX + accelX) + (ball.radius) * Math.cos(angle * (Math.PI / 180));
+        const yCoordinate = (ball.centerY + accelY) + (ball.radius) * Math.sin(angle * (Math.PI / 180));
+        const obstacleColour = [0, 0, 255];
+        const checkColour =  ctx.getImageData(xCoordinate -0.5, yCoordinate -0.5, 1, 1).data.slice(0, 3);
+        if (checkColour.every((value, index) => value === obstacleColour[index])){
+            return true;
+        }
+    }
+        return false;
+    }
 
     function drawMaze() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -52,71 +64,23 @@
         drawBall();
     }
 
-    function checkCollision() {
-        const topPixelData = ctx.getImageData(ball.centerX, ball.centerY - ball.radius - 2, 1, 1).data.slice(0, 3);
-        const rightPixelData = ctx.getImageData(ball.centerX + ball.radius + 2, ball.centerY, 1, 1).data.slice(0, 3);
-        const bottomPixelData = ctx.getImageData(ball.centerX, ball.centerY + ball.radius + 2, 1, 1).data.slice(0, 3);
-        const leftPixelData = ctx.getImageData(ball.centerX - ball.radius - 2, ball.centerY, 1, 1).data.slice(0, 3);
 
-        const topRightPixelData = ctx.getImageData(ball.centerX + ball.radius, ball.centerY - ball.radius, 1, 1).data.slice(0, 3);
-        const bottomRightPixelData = ctx.getImageData(ball.centerX + ball.radius, ball.centerY + ball.radius, 1, 1).data.slice(0, 3);
-        const bottomLeftPixelData = ctx.getImageData(ball.centerX - ball.radius, ball.centerY + ball.radius, 1, 1).data.slice(0, 3);
-        const topLeftPixelData = ctx.getImageData(ball.centerX - ball.radius, ball.centerY - ball.radius, 1, 1).data.slice(0, 3);
-
-        const bluePixel = [0, 0, 255];
-
-        return {
-            topPixel: topPixelData.every((value, index) => value === bluePixel[index]),
-            rightPixel: rightPixelData.every((value, index) => value === bluePixel[index]),
-            bottomPixel: bottomPixelData.every((value, index) => value === bluePixel[index]),
-            leftPixel: leftPixelData.every((value, index) => value === bluePixel[index]),
-            topRightPixel: topRightPixelData.every((value, index) => value === bluePixel[index]),
-            bottomRightPixel: bottomRightPixelData.every((value, index) => value === bluePixel[index]),
-            bottomLeftPixel: bottomLeftPixelData.every((value, index) => value === bluePixel[index]),
-            topLeftPixel: topLeftPixelData.every((value, index) => value === bluePixel[index]),
-        };
-    }
-
-    document.addEventListener('keydown', function(event) {
-        const collision = checkCollision();
-        if (event.key === 'ArrowUp' && !collision.topPixel) {
-            ball.centerY -= 5;
-        }
-        if (event.key === 'ArrowRight' && !collision.rightPixel) {
-            ball.centerX += 5;
-        }
-        if (event.key === 'ArrowDown' && !collision.bottomPixel) {
-            ball.centerY += 5;
-        }
-        if (event.key === 'ArrowLeft' && !collision.leftPixel) {
-            ball.centerX -= 5;
-        }
-        drawMaze();
-    });
     function getAccel(){
         DeviceMotionEvent.requestPermission().then(response => {
             if (response === 'granted') {
                 window.addEventListener('deviceorientation',(event) => {
-                    const collision = checkCollision();
-                    const frontToBack = event.beta;
-                    const leftToRight = event.gamma;
-                    if (frontToBack < 0 && !collision.topPixel && !collision.topRightPixel && !collision.topLeftPixel) {
-                        ball.centerY += Math.min(10, Math.max(-10, Math.round(frontToBack)/2));
+                    const accelX = event.gamma;
+                    const accelY = event.beta;
+                    const willCollide = checkIfCollide(accelX, accelY);
+                    if(!willCollide) {
+                        ball.centerX += accelX / 2;
+                        ball.centerY += accelY / 2;
                     }
-                    if (frontToBack > 0 && !collision.bottomPixel && !collision.bottomRightPixel && !collision.bottomLeftPixel) {
-                        ball.centerY += Math.min(10, Math.max(-10, Math.round(frontToBack)/2));
-                    }
-                    if (leftToRight > 0 && !collision.rightPixel && !collision.topRightPixel && !collision.bottomRightPixel) {
-                        ball.centerX += Math.min(10, Math.max(-10, Math.round(leftToRight)/2));
-                    }
-                    if (leftToRight < 0 && !collision.leftPixel && !collision.topLeftPixel && !collision.bottomLeftPixel) {
-                        ball.centerX += Math.min(10, Math.max(-10, Math.round(leftToRight)/2));
-                    }
-                    drawMaze();
+                    drawMaze()
                 });
-            };
+            }
         });
-    };
+    }
     drawMaze();
 </script>
 </body>

@@ -68,7 +68,7 @@
     function getAccel(){
         DeviceMotionEvent.requestPermission().then(response => {
             if (response === 'granted') {
-                window.addEventListener('deviceorientation',(event) => {
+                window.addEventListener('devicemotion',(event) => {
                     const accelX = event.accelerationIncludingGravity.x;
                     const accelY = event.accelerationIncludingGravity.y;
                     const willCollide = checkIfCollide(accelX, accelY);

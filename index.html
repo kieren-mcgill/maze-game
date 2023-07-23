@@ -38,11 +38,13 @@
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const radius = 200;
+    ctx.fillStyle = 'white'
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 10;
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
     ctx.stroke();
+    ctx.fill();
     }
 
     function checkIfCollide(accelX, accelY) {

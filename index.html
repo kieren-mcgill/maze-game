@@ -64,16 +64,23 @@
         drawBall();
     }
 
-    function getAccel(){
+    function getAccel() {
         const XScalingFactor = 2;
         const YScalingFactor = 4;
+        const maxAccel = 3;
+        const minAccel = -3;
+
         DeviceMotionEvent.requestPermission().then(response => {
             if (response === 'granted') {
-                window.addEventListener('devicemotion',(event) => {
-                    const accelX = (event.accelerationIncludingGravity.x * XScalingFactor);
-                    const accelY = -(event.accelerationIncludingGravity.y * YScalingFactor);
+                window.addEventListener('devicemotion', (event) => {
+                    let accelX = event.accelerationIncludingGravity.x * XScalingFactor;
+                    let accelY = -event.accelerationIncludingGravity.y * YScalingFactor;
+
+                    accelX = Math.min(maxAccel, Math.max(minAccel, accelX));
+                    accelY = Math.min(maxAccel, Math.max(minAccel, accelY));
+
                     const willCollide = checkIfCollide(accelX, accelY);
-                    if(!willCollide) {
+                    if (!willCollide) {
                         ball.centerX += accelX;
                         ball.centerY += accelY;
                     }

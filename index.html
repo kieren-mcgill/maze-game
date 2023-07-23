@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="btn-div">
-    <button class="play-btn" id="playButton" style="height:50px;" onclick="getAccel()"><h2>Play game!</h2></button>
+<button class="play-btn" id="playButton"  style="height:50px;" onclick="getAccel()"><h2>Play game!</h2></button>
 </div>
 <canvas id="myCanvas" width="500" height="500" style="border:1px solid #000000;">
     Your browser does not support the HTML canvas tag.
@@ -25,7 +25,6 @@
         radius: 10,
         fillColor: 'red',
     };
-
     function drawBall() {
         ctx.fillStyle = ball.fillColor;
         ctx.beginPath();
@@ -33,29 +32,28 @@
         ctx.fill();
     }
 
+    const obstacleColour = [0, 0, 255];
+
     function drawLogo() {
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const radius = 200;
-        ctx.fillStyle = 'white';
-        ctx.strokeStyle = 'blue';
-        ctx.lineWidth = 10;
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.fill();
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 200;
+    ctx.strokeStyle = obstacleColour;
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.stroke();
     }
 
     function checkIfCollide(accelX, accelY) {
-        for (let angle = 0; angle < 360; angle += 10) {
-            const xCoordinate = (ball.centerX + accelX) + (ball.radius) * Math.cos(angle * (Math.PI / 180));
-            const yCoordinate = (ball.centerY + accelY) + (ball.radius) * Math.sin(angle * (Math.PI / 180));
-            const obstacleColour = [0, 0, 255];
-            const checkColour = ctx.getImageData(xCoordinate - 0.5, yCoordinate - 0.5, 1, 1).data.slice(0, 3);
-            if (checkColour.every((value, index) => value === obstacleColour[index])) {
-                return true;
-            }
+        for (let angle  = 0; angle < 360; angle += 10) {
+        const xCoordinate = (ball.centerX + accelX) + (ball.radius) * Math.cos(angle * (Math.PI / 180));
+        const yCoordinate = (ball.centerY + accelY) + (ball.radius) * Math.sin(angle * (Math.PI / 180));
+        const checkColour =  ctx.getImageData(xCoordinate -0.5, yCoordinate -0.5, 1, 1).data.slice(0, 3);
+        if (checkColour.every((value, index) => value === obstacleColour[index])){
+            return true;
         }
+    }
         return false;
     }
 
@@ -65,17 +63,13 @@
         drawBall();
     }
 
-    let animationId = null;
-
-    function updateBallPosition() {
+    function getAccel() {
+        ball.centerX = canvas.width / 2;
+        ball.centerY = canvas.height / 2;
         const XScalingFactor = 2;
         const YScalingFactor = 4;
         const maxAccel = 4;
         const minAccel = -4;
-
-        if (animationId) {
-            cancelAnimationFrame(animationId);
-        }
 
         DeviceMotionEvent.requestPermission().then(response => {
             if (response === 'granted') {
@@ -95,9 +89,8 @@
                 });
             }
         });
-        animationId = requestAnimationFrame(updateBallPosition);
     }
-    updateBallPosition();
+    drawMaze();
 </script>
 </body>
 </html>

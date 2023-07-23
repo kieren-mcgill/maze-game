@@ -34,7 +34,7 @@
 
     const obstacleColour = [0, 0, 0];
 
-    function drawLogo() {
+    function drawBoundary() {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const radius = 200;
@@ -47,6 +47,27 @@
     ctx.fill();
     }
 
+    function drawCenterRectangle() {
+        const rectHeight = 40;
+        const rectWidth = canvas.width - 120;
+        const rectX = (canvas.width - rectWidth) / 2;
+        const rectY = (canvas.height - rectHeight) / 2;
+        ctx.fillStyle = 'white';
+        ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+    }
+
+    function drawMaze() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const img = new Image();
+        const imgSize = 240;
+        img.onload = function () {
+            drawBoundary();
+            ctx.drawImage(img, (canvas.width / 2)-(imgSize / 2), (canvas.width / 2)-(imgSize / 2), imgSize, imgSize);
+            drawCenterRectangle();
+            drawBall();
+        }
+        img.src = 'insta-logo.png';
+    }
     function checkIfCollide(accelX, accelY) {
         for (let angle  = 0; angle < 360; angle += 10) {
         const xCoordinate = (ball.centerX + accelX) + (ball.radius) * Math.cos(angle * (Math.PI / 180));
@@ -59,11 +80,6 @@
         return false;
     }
 
-    function drawMaze() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawLogo();
-        drawBall();
-    }
 
     function getAccel() {
         ball.centerX = canvas.width / 2;

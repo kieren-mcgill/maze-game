@@ -74,7 +74,7 @@
             }
         }
         if(contactPixels > 0) {
-            return {x: -(adjustX / contactPixels), y: -(adjustY / contactPixels)};
+            return {x: -((adjustX / contactPixels) + 1), y: -((adjustY / contactPixels) + 1)};
         } else {
             return {x: 0, y: 0};
         }

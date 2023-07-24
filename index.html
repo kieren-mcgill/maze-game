@@ -58,42 +58,32 @@
     }
 
     function drawLogo() {
-        const img = new Image();
-        const imgSize = 240;
-        img.onload = function () {
-            ctx.drawImage(img, (canvas.width / 2) - (imgSize / 2), (canvas.width / 2) - (imgSize / 2), imgSize, imgSize);
-        }
-        img.src = 'insta-logo.png';
-    }
-
-    function firstDrawMaze() {
-        const img = new Image();
-        const imgSize = 240;
-        img.onload = function () {
-            drawBoundary();
-            ctx.drawImage(img, (canvas.width / 2) - (imgSize / 2), (canvas.width / 2) - (imgSize / 2), imgSize, imgSize);
-            drawCenterRectangle();
-            drawBall();
-        }
-        img.src = 'insta-logo.png';
+        ctx.drawImage(img, (canvas.width / 2) - (imgSize / 2), (canvas.width / 2) - (imgSize / 2), imgSize, imgSize);
     }
 
     function drawMaze() {
-            drawLogo();
-            drawBoundary();
-            drawCenterRectangle();
-            drawBall();
+        drawBoundary();
+        drawLogo();
+        drawCenterRectangle();
+        drawBall();
+    }
+
+    const img = new Image();
+    const imgSize = 240;
+    img.src = 'insta-logo.png';
+    img.onload = function () {
+        drawMaze();
     }
 
     function checkIfCollide(accelX, accelY) {
-        for (let angle  = 0; angle < 360; angle += 10) {
-        const xCoordinate = (ball.centerX + accelX) + (ball.radius) * Math.cos(angle * (Math.PI / 180));
-        const yCoordinate = (ball.centerY + accelY) + (ball.radius) * Math.sin(angle * (Math.PI / 180));
-        const checkColour =  ctx.getImageData(xCoordinate -0.5, yCoordinate -0.5, 1, 1).data.slice(0, 3);
-        if (checkColour.every((value, index) => value === obstacleColour[index])){
-            return true;
+        for (let angle = 0; angle < 360; angle += 10) {
+            const xCoordinate = (ball.centerX + accelX) + (ball.radius) * Math.cos(angle * (Math.PI / 180));
+            const yCoordinate = (ball.centerY + accelY) + (ball.radius) * Math.sin(angle * (Math.PI / 180));
+            const checkColour = ctx.getImageData(xCoordinate - 0.5, yCoordinate - 0.5, 1, 1).data.slice(0, 3);
+            if (checkColour.every((value, index) => value === obstacleColour[index])) {
+                return true;
+            }
         }
-    }
         return false;
     }
 
@@ -124,7 +114,8 @@
             }
         });
     }
-    firstDrawMaze();
+
+    drawMaze();
 </script>
 </body>
 </html>

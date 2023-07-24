@@ -58,48 +58,34 @@
     }
 
     function drawMaze() {
-        // ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // const img = new Image();
-        // const imgSize = 240;
-        // img.onload = function () {
-            drawBoundary();
-            // ctx.drawImage(img, (canvas.width / 2) - (imgSize / 2), (canvas.width / 2) - (imgSize / 2), imgSize, imgSize);
-            drawCenterRectangle();
-            drawBall();
-        // }
-        // img.src = 'insta-logo.png';
+        drawBoundary();
+        drawCenterRectangle();
+        drawBall();
     }
 
-    // function checkIfCollide(accelX, accelY) {
-    //     for (let angle  = 0; angle < 360; angle += 10) {
-    //     const xCoordinate = (ball.centerX + accelX) + (ball.radius) * Math.cos(angle * (Math.PI / 180));
-    //     const yCoordinate = (ball.centerY + accelY) + (ball.radius) * Math.sin(angle * (Math.PI / 180));
-    //     const checkColour =  ctx.getImageData(xCoordinate -0.5, yCoordinate -0.5, 1, 1).data.slice(0, 3);
-    //     if (checkColour.every((value, index) => value === obstacleColour[index])){
-    //         return true;
-    //     }
-    // }
-    //     return false;
-    // }
-
     function checkIfCollide(accelX, accelY) {
-        let sumX = 0;
-        let sumY = 0;
+        let collisionX = 0;
+        let collisionY = 0;
         let pixelCount = 0;
+
         for (let angle = 0; angle < 360; angle += 10) {
-            const xCoordinate = (ball.centerX) + (ball.radius) * Math.cos(angle * (Math.PI / 180));
-            const yCoordinate = (ball.centerY) + (ball.radius) * Math.sin(angle * (Math.PI / 180));
+            const xCoordinate = ball.centerX + (ball.radius) * Math.cos(angle * (Math.PI / 180));
+            const yCoordinate = ball.centerY + (ball.radius) * Math.sin(angle * (Math.PI / 180));
             const checkColour = ctx.getImageData(xCoordinate - 0.5, yCoordinate - 0.5, 1, 1).data.slice(0, 3);
+
             if (checkColour.every((value, index) => value === obstacleColour[index])) {
-                sumX += xCoordinate;
-                sumY += yCoordinate;
+                collisionX += xCoordinate;
+                collisionY += yCoordinate;
                 pixelCount += 1;
             }
         }
+
         if (pixelCount > 0) {
-            return {x: sumX / pixelCount, y: sumY / pixelCount};
+            collisionX /= pixelCount;
+            collisionY /= pixelCount;
+            return { x: collisionX, y: collisionY };
         } else {
-            return {x: 0, y: 0};
+            return { x: 0, y: 0 };
         }
     }
 
@@ -122,8 +108,20 @@
 
                     const collisionAdjust = checkIfCollide(accelX, accelY);
 
-                    ball.centerX += accelX - ((accelX / ball.radius) * collisionAdjust.x);
-                    ball.centerY += accelY - ((accelY / ball.radius) * collisionAdjust.y);
+                    const deltaX = ball.centerX - collisionAdjust.x;
+                    const deltaY = ball.centerY - collisionAdjust.y;
+                    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                    const collisionDepth = ball.radius - distance;
+
+                    if (collisionDepth > 0) {
+                        const collisionNormalX = deltaX / distance;
+                        const collisionNormalY = deltaY / distance;
+                        ball.centerX += collisionNormalX * collisionDepth;
+                        ball.centerY += collisionNormalY * collisionDepth;
+                    } else {
+                        ball.centerX += accelX;
+                        ball.centerY += accelY;
+                    }
 
                     drawMaze();
                 });

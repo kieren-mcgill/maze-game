@@ -16,8 +16,6 @@ function drawBall() {
     ctx.fill();
 }
 
-const obstacleColour = [0, 0, 0];
-
 function drawBoundary() {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
@@ -72,7 +70,7 @@ function checkIfCollide(accelX, accelY) {
 
 function getAccel() {
     ball.centerX = canvas.width / 2;
-    ball.centerY = canvas.height / 2;
+    ball.centerY = canvas.height -50;
     const XScalingFactor = 2;
     const YScalingFactor = 4;
     const maxAccel = 4;

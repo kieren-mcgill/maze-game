@@ -58,16 +58,16 @@
     }
 
     function drawMaze() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const img = new Image();
-        const imgSize = 240;
-        img.onload = function () {
+        // ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // const img = new Image();
+        // const imgSize = 240;
+        // img.onload = function () {
             drawBoundary();
-            ctx.drawImage(img, (canvas.width / 2) - (imgSize / 2), (canvas.width / 2) - (imgSize / 2), imgSize, imgSize);
+            // ctx.drawImage(img, (canvas.width / 2) - (imgSize / 2), (canvas.width / 2) - (imgSize / 2), imgSize, imgSize);
             drawCenterRectangle();
             drawBall();
-        }
-        img.src = 'insta-logo.png';
+        // }
+        // img.src = 'insta-logo.png';
     }
 
     // function checkIfCollide(accelX, accelY) {
@@ -125,7 +125,7 @@
                     ball.centerX += accelX - ((accelX / ball.radius) * collisionAdjust.x);
                     ball.centerY += accelY - ((accelY / ball.radius) * collisionAdjust.y);
 
-                    drawBall();
+                    drawMaze();
                 });
             }
         });

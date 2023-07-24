@@ -12,6 +12,6 @@ body {
 }
 
 .play-btn {
-    min-height: 50px;
+    font-size: 2rem;
     width: 30%;
 }

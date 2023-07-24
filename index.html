@@ -66,6 +66,18 @@
         img.src = 'insta-logo.png';
     }
 
+    function firstDrawMaze() {
+        const img = new Image();
+        const imgSize = 240;
+        img.onload = function () {
+            drawBoundary();
+            ctx.drawImage(img, (canvas.width / 2) - (imgSize / 2), (canvas.width / 2) - (imgSize / 2), imgSize, imgSize);
+            drawCenterRectangle();
+            drawBall();
+        }
+        img.src = 'insta-logo.png';
+    }
+
     function drawMaze() {
             drawLogo();
             drawBoundary();
@@ -112,8 +124,7 @@
             }
         });
     }
-    drawLogo();
-    drawMaze();
+    firstDrawMaze();
 </script>
 </body>
 </html>
